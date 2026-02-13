@@ -6,7 +6,7 @@ st.set_page_config(page_title="German Text Grader", page_icon="📝")
 st.title("🇩🇪 German Text Grader (telc Style)")
 
 # API Key Handling: Priority given to Streamlit Secrets, then user input
-api_key = st.sidebar.text_input("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", type="password")
+api_key = st.sidebar.text_input("OPENAI_API_KEY", type="password")
 if not api_key and "OPENAI_API_KEY" in st.secrets:
     api_key = st.secrets["OPENAI_API_KEY"]
 
@@ -51,3 +51,4 @@ if st.button("Grade Text"):
             except Exception as e:
 
                 st.error(f"Error: {e}")
+
