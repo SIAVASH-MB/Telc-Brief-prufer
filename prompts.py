@@ -1,9 +1,74 @@
 from typing import Dict
 
-def get_system_prompt(level: str) -> str:
+
+B1_TOPICS = [
+    {
+        "id": 1,
+        "subject": "Einladung zur Geburtstagsparty",
+        "description": "Sie haben bald Geburtstag und möchten eine Party feiern. Schreiben Sie eine Einladung an Ihre Freunde.",
+        "points": [
+            "Grund für das Schreiben",
+            "Wann und wo die Party ist",
+            "Bitte um Antwort (Zu-/Absage)",
+            "Was die Gäste mitbringen sollen (Essen/Getränke)"
+        ]
+    },
+    {
+        "id": 2,
+        "subject": "Entschuldigung für den Kurs",
+        "description": "Sie können nächste Woche nicht in den Deutschkurs kommen. Schreiben Sie eine E-Mail an Ihre Lehrerin, Frau Müller.",
+        "points": [
+            "Grund für Ihr Fehlen",
+            "Entschuldigung",
+            "Frage nach den Hausaufgaben",
+            "Wann Sie wieder kommen"
+        ]
+    },
+    {
+        "id": 3,
+        "subject": "Antwort auf eine Wohnungsanzeige",
+        "description": "Sie haben eine interessante Wohnungsanzeige in der Zeitung gelesen. Schreiben Sie eine E-Mail an den Vermieter, Herrn Schneider.",
+        "points": [
+            "Grund für das Schreiben",
+            "Informationen über sich selbst (Alter, Beruf, etc.)",
+            "Frage nach einem Besichtigungstermin",
+            "Frage nach den Nebenkosten"
+        ]
+    },
+    {
+        "id": 4,
+        "subject": "Beschwerde über den Urlaub",
+        "description": "Sie waren im Urlaub in einem Hotel, aber Sie waren nicht zufrieden. Schreiben Sie einen Beschwerdebrief an den Reiseveranstalter 'Sonne & Meer'.",
+        "points": [
+            "Grund für das Schreiben",
+            "Was im Hotel nicht gut war (Essen, Zimmer, Lautstärke)",
+            "Ihre Enttäuschung ausdrücken",
+            "Forderung nach einer Entschädigung"
+        ]
+    }
+]
+
+def get_system_prompt(level: str, topic: Dict = None) -> str:
+    topic_instruction = ""
+    if topic:
+        topic_instruction = f"""
+IMPORTANT: You must grade the text based on its RATIONAL CONNECTION to the following topic:
+Subject: {topic['subject']}
+Description: {topic['description']}
+Required Points (Leitpunkte):
+1. {topic['points'][0]}
+2. {topic['points'][1]}
+3. {topic['points'][2]}
+4. {topic['points'][3]}
+
+Task Management Score (Criterion I) MUST strictly reflect whether these 4 specific points were addressed. 
+If the text is about a completely different topic, Criterion I must be 0 (D).
+"""
+
     return f"""You are a certified telc examiner for the German language, specifically for the {level} level (Zertifikat Deutsch).
 Your task is to grade a student's written exam (Schriftlicher Ausdruck) according to the official telc marking criteria.
 You must be strict, objective, and constructive.
+{topic_instruction}
 
 Output your evaluation in JSON format with the following structure:
 {{

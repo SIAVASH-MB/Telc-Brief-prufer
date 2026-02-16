@@ -2,7 +2,7 @@
 import os
 import json
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pydantic import BaseModel, Field
 from openai import OpenAI
 from rich.console import Console
@@ -54,8 +54,8 @@ def get_api_key():
         api_key = Prompt.ask("Please enter your OpenAI API Key", password=True)
     return api_key
 
-def grade_text(client: OpenAI, text: str, level: str) -> GradingResult:
-    system_prompt = prompts.get_system_prompt(level)
+def grade_text(client: OpenAI, text: str, level: str, topic: Optional[Dict] = None) -> GradingResult:
+    system_prompt = prompts.get_system_prompt(level, topic)
     rubric = prompts.get_rubric(level)
     
     user_message = f"""
